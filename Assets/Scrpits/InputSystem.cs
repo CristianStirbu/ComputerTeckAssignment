@@ -2,6 +2,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using System.Linq.Expressions;
 
 public partial class InputSystem : SystemBase
 {
@@ -25,6 +26,6 @@ public partial class InputSystem : SystemBase
         Vector2 mousePosition = controls.ActionMap.MousePosition.ReadValue<Vector2>();
         bool isPressingLMB = controls.ActionMap.Shooting.ReadValue<float>() == 1 ? true : false;
 
-
+        SystemAPI.SetSingleton(new InputComponent { mousePos = mousePosition,movement = moveVector,pressingLMB = isPressingLMB});
     }
 }
