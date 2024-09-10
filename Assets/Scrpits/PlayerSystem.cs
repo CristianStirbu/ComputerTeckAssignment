@@ -47,7 +47,19 @@ public partial struct PlayerSystem : ISystem
     {
         if(inputComponent.pressingLMB && nextShootTime < SystemAPI.Time.ElapsedTime)
         {
+            EntityCommandBuffer ECB = new EntityCommandBuffer(Allocator.Temp);
             Entity bulletEntity = entityManager.Instantiate(playerComponent.BulletPrefab);
+
+            ECB.AddComponent(bulletEntity, new BulletComponent { speed = 10 });
+
+            LocalTransform bulletTranform = entityManager.GetComponentData<LocalTransform>(bulletEntity);
+            bulletTranform.Rotation = entityManager.GetComponentData<LocalTransform>(playerEntity).Rotation;
+            LocalTransform playerTransform = entityManager.GetComponentData<LocalTransform>(playerEntity);
+            bulletTranform.Position = playerTransform.Position + playerTransform.Right() + playerTransform.Up() * -0.35f;
+            ECB.SetComponent(bulletEntity, bulletTranform);
+
+            ECB.Playback(entityManager);
+
             nextShootTime = (float)SystemAPI.Time.ElapsedTime + playerComponent.ShootCooldown;
         }
     }
