@@ -6,6 +6,7 @@ using UnityEngine;
 public class EnemySpawnerAuthoring : MonoBehaviour
 {
     public float spwanCooldown = 1;
+    public Vector2 cameraSize;
     public List<EnemySO> enemySO;
 
     public class EnemySpawnBaker : Baker<EnemySpawnerAuthoring> 
@@ -16,7 +17,8 @@ public class EnemySpawnerAuthoring : MonoBehaviour
 
             AddComponent(enemySpawnerAuthoring, new EnemySpawnerComponent
             {
-                spawnCooldown = authoring.spwanCooldown
+                spawnCooldown = authoring.spwanCooldown,
+                cameraSize = authoring.cameraSize,
             });
 
             List<EnemyData> enemyData = new List<EnemyData>();
