@@ -31,7 +31,7 @@ public partial struct BulletSystem : ISystem
 
                 foreach(ColliderCastHit hit in hits)
                 {
-                    entityManager.SetEnabled(hit.Entity, false);
+                    entityManager.DestroyEntity(entity);
                 }
 
                 hits.Dispose();
@@ -44,7 +44,8 @@ public partial struct BulletSystem : ISystem
 public enum CollisionLayer
 {
     Default = 1 << 0,
-    Enemy = 1 << 6
+    Enemy = 1 << 6,
+    Bullet = 1 << 6
 }
 
 
