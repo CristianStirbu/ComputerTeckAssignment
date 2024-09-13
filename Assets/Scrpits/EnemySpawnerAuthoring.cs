@@ -29,6 +29,8 @@ public class EnemySpawnerAuthoring : MonoBehaviour
                 {
                     level = e.level,
                     moveSpeed = e.moveSpeed,
+                    health = e.health,
+                    damage = e.damage,
                     prefab = GetEntity(e.prefab, TransformUsageFlags.None)
                 });
             }

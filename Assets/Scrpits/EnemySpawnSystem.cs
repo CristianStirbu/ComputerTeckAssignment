@@ -59,6 +59,8 @@ public partial class EnemySpawnSystem : SystemBase
             Scale = 1
         });
 
+        EntityManager.AddComponentData(newEnemy, new EnemyComponent { currentHealth = availbleEnemies[index].health });
+
         nextSpawnTime = (float)SystemAPI.Time.ElapsedTime + enemySpawnerComponent.spawnCooldown;
     }
 

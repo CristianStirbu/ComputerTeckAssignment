@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-public struct BulletComponent : IComponentData
+public struct EnemyComponent : IComponentData
 {
-    public float speed;
-    public float Size;
+    public float currentHealth;
 }
