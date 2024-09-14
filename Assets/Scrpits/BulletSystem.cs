@@ -31,6 +31,7 @@ public partial struct BulletSystem : ISystem
 
                 foreach(ColliderCastHit hit in hits)
                 {
+                    entityManager.SetEnabled(hit.Entity, false);
                     entityManager.DestroyEntity(entity);
                 }
 

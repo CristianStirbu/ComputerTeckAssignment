@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spwanCooldown: 1
-  cameraSize: {x: 11, y: 6}
+  cameraSize: {x: 3, y: 6}
   enemySO:
   - {fileID: 11400000, guid: 54ba80efcd35b0545a6557a08f6933de, type: 2}
   - {fileID: 11400000, guid: 54ba80efcd35b0545a6557a08f6933de, type: 2}

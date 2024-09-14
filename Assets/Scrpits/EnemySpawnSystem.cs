@@ -39,7 +39,6 @@ public partial class EnemySpawnSystem : SystemBase
             SpawnEnemy();
         }
 
-        
     }
 
     private void SpawnEnemy()
@@ -48,9 +47,7 @@ public partial class EnemySpawnSystem : SystemBase
         List<EnemyData> availbleEnemies = new List<EnemyData>();
         PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
         EntityManager entityManager = EntityManager;
-
-      //  LocalTransform enemyTransform = entityManager.GetComponentData<LocalTransform>(enemySpawnEntity);
-       // BulletComponent enemyComponent = entityManager.GetComponentData<BulletComponent>(enemySpawnEntity);
+        NativeArray<Entity> allEntities = entityManager.GetAllEntities();
 
         foreach (EnemyData enemyData in enemyDataContainerComponent.enemies)
         {
@@ -59,16 +56,9 @@ public partial class EnemySpawnSystem : SystemBase
                 availbleEnemies.Add(enemyData);
             }
 
-           /* NativeList<ColliderCastHit> hits = new NativeList<ColliderCastHit>(Allocator.Temp);
-            physicsWorld.SphereCastAll(enemyTransform.Position, enemyComponent.Size / 2, float3.zero, 1,
-                    ref hits, new CollisionFilter { BelongsTo = (uint)CollisionLayer.Default, CollidesWith = (uint)CollisionLayer.Bullet });
+            
 
-            foreach (ColliderCastHit hit in hits)
-            {
-                entityManager.DestroyEntity(enemySpawnEntity);
-            }
-
-            hits.Dispose();*/
+            
         }
 
         int index = random.NextInt(availbleEnemies.Count);
@@ -82,10 +72,33 @@ public partial class EnemySpawnSystem : SystemBase
         });
 
         
-
         EntityManager.AddComponentData(newEnemy, new EnemyComponent { currentHealth = availbleEnemies[index].health });
 
         nextSpawnTime = (float)SystemAPI.Time.ElapsedTime + enemySpawnerComponent.spawnCooldown;
+
+       /*  foreach(Entity entity in allEntities)
+        {
+            if (entityManager.HasComponent<EnemyComponent>(entity))
+            {
+                 LocalTransform enemyTransform = entityManager.GetComponentData<LocalTransform>(entity);
+                EnemyComponent enemyComponent = entityManager.GetComponentData<EnemyComponent>(entity);
+
+                NativeList<ColliderCastHit> hits = new NativeList<ColliderCastHit>(Allocator.Temp);
+                physicsWorld.SphereCastAll(enemyTransform.Position, enemyComponent.Size / 2, float3.zero, 1,
+                        ref hits, new CollisionFilter { BelongsTo = (uint)CollisionLayer.Default, CollidesWith = (uint)CollisionLayer.Bullet });
+
+                foreach (ColliderCastHit hit in hits)
+                {
+                    entityManager.DestroyEntity(entity);
+                }
+
+                hits.Dispose();
+            }
+
+           
+        }*/
+
+
     }
 
     private float3 GetPositionOutsideOfCaneraRange()
