@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Collections;
 using UnityEngine;
+using Unity.Physics;
 using UnityEngine.Scripting.APIUpdating;
 
 public partial struct PlayerSystem : ISystem
@@ -26,6 +27,37 @@ public partial struct PlayerSystem : ISystem
 
         Move(ref state);
         Shoot(ref state);
+
+        NativeArray<Entity> allEntities = entityManager.GetAllEntities();
+        PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
+
+        foreach (Entity entity in allEntities)
+        {
+            if (entityManager.HasComponent<PlayerComponent>(entity))
+            {
+                LocalTransform playerTransform = entityManager.GetComponentData<LocalTransform>(entity);
+                PlayerComponent playerComponent = entityManager.GetComponentData<PlayerComponent>(entity);
+
+                NativeList<ColliderCastHit> hits = new NativeList<ColliderCastHit>(Allocator.Temp);
+                physicsWorld.SphereCastAll(playerTransform.Position, playerComponent.Size / 1, float3.zero, 1,
+                   ref hits, new CollisionFilter { BelongsTo = (uint)CollisionLayer.Default, CollidesWith = (uint)CollisionLayer.Enemy });
+
+                entityManager.SetComponentData(entity, playerTransform);
+
+                foreach (ColliderCastHit hit in hits)
+                {
+                    entityManager.DestroyEntity(entity);
+                }
+
+                hits.Dispose();
+
+            }
+        }
+
+       
+
+
+
     }
 
     private void Move(ref SystemState state)
@@ -55,7 +87,7 @@ public partial struct PlayerSystem : ISystem
             LocalTransform bulletTranform = entityManager.GetComponentData<LocalTransform>(bulletEntity);
             bulletTranform.Rotation = entityManager.GetComponentData<LocalTransform>(playerEntity).Rotation;
             LocalTransform playerTransform = entityManager.GetComponentData<LocalTransform>(playerEntity);
-            bulletTranform.Position = playerTransform.Position + playerTransform.Right() + playerTransform.Up() * -0.35f;
+            bulletTranform.Position = playerTransform.Position + playerTransform.Right() + playerTransform.Up() * -0.45f;
             ECB.SetComponent(bulletEntity, bulletTranform);
 
             ECB.Playback(entityManager);

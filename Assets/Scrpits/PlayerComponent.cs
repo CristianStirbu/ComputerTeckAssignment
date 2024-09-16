@@ -7,6 +7,7 @@ public struct PlayerComponent : IComponentData
 {
     public float MoveSpeed;
     public float ShootCooldown;
+    public float Size;
     public Entity BulletPrefab;
 }
     
