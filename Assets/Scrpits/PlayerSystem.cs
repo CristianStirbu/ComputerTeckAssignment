@@ -53,11 +53,6 @@ public partial struct PlayerSystem : ISystem
 
             }
         }
-
-       
-
-
-
     }
 
     private void Move(ref SystemState state)

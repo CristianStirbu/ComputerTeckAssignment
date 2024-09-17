@@ -14,6 +14,8 @@ public partial class EnemySpawnSystem : SystemBase
     private EnemySpawnerComponent enemySpawnerComponent;
     private EnemyDataContainer enemyDataContainerComponent;
     private Entity enemySpawnEntity;
+    public float WaveTime = 0;
+    public bool Wave;
     private float nextSpawnTime;
     private Random random;
 
@@ -22,9 +24,14 @@ public partial class EnemySpawnSystem : SystemBase
         random = Random.CreateFromIndex((uint)enemySpawnerComponent.GetHashCode());
     }
 
+    protected override void OnStartRunning()
+    {
+        Wave = false;
+    }
+
     protected override void OnUpdate()
     {
-        
+        WaveTime += SystemAPI.Time.DeltaTime;
 
         if (!SystemAPI.TryGetSingletonEntity<EnemySpawnerComponent>(out enemySpawnEntity))
         {
@@ -33,12 +40,26 @@ public partial class EnemySpawnSystem : SystemBase
 
         enemySpawnerComponent = EntityManager.GetComponentData<EnemySpawnerComponent>(enemySpawnEntity);
         enemyDataContainerComponent = EntityManager.GetComponentObject<EnemyDataContainer>(enemySpawnEntity);
+        
 
-        if(SystemAPI.Time.ElapsedTime > nextSpawnTime)
+        if(WaveTime > 5)
         {
-            SpawnEnemy();
+            Wave = true;
         }
 
+        if (WaveTime > 10 )
+        {
+            WaveTime = 0;
+            Wave = false;
+        }
+
+        if (Wave == true)
+        {
+            if (SystemAPI.Time.ElapsedTime > nextSpawnTime)
+            {
+                SpawnEnemy();
+            }
+        }
     }
 
     private void SpawnEnemy()
@@ -55,10 +76,6 @@ public partial class EnemySpawnSystem : SystemBase
             {
                 availbleEnemies.Add(enemyData);
             }
-
-            
-
-            
         }
 
         int index = random.NextInt(availbleEnemies.Count);
@@ -103,7 +120,7 @@ public partial class EnemySpawnSystem : SystemBase
 
     private float3 GetPositionOutsideOfCaneraRange()
     {
-        float3 position = new float3(random.NextFloat2(-enemySpawnerComponent.cameraSize * 2, enemySpawnerComponent.cameraSize * 2), 0);
+        float3 position = new float3(random.NextFloat2(-enemySpawnerComponent.cameraSize * 2, enemySpawnerComponent.cameraSize * 3), 0);
 
         while (position.x < enemySpawnerComponent.cameraSize.x && position.x > -enemySpawnerComponent.cameraSize.x
             && position.y < enemySpawnerComponent.cameraSize.y && position.y > -enemySpawnerComponent.cameraSize.y)
