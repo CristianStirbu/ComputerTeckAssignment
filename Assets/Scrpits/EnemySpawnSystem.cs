@@ -120,12 +120,12 @@ public partial class EnemySpawnSystem : SystemBase
 
     private float3 GetPositionOutsideOfCaneraRange()
     {
-        float3 position = new float3(random.NextFloat2(-enemySpawnerComponent.cameraSize * 2, enemySpawnerComponent.cameraSize * 3), 0);
+        float3 position = new float3(random.NextFloat2(-enemySpawnerComponent.cameraSize * 1, enemySpawnerComponent.cameraSize * 3), 0);
 
         while (position.x < enemySpawnerComponent.cameraSize.x && position.x > -enemySpawnerComponent.cameraSize.x
             && position.y < enemySpawnerComponent.cameraSize.y && position.y > -enemySpawnerComponent.cameraSize.y)
         {
-            position = new float3(random.NextFloat2(-enemySpawnerComponent.cameraSize * 2, enemySpawnerComponent.cameraSize * 2), 0); 
+            position = new float3(random.NextFloat2(-enemySpawnerComponent.cameraSize * 1, enemySpawnerComponent.cameraSize * 3), 0); 
         }
 
         position += new float3(Camera.main.transform.position.x, Camera.main.transform.position.y,0);
